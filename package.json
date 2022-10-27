@@ -1,0 +1,8 @@
+{
+  "name": "webtube-2022",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/bluepaun/webtube-2022.git",
+  "author": "bluepaun <bluepaun@gmail.com>",
+  "license": "MIT"
+}
