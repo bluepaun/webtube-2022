@@ -83,7 +83,7 @@ const runServer = (cb) => {
 };
 
 const watch = () => {
-  gulp.watch(routes.pug.watch, buildPug);
+  /* gulp.watch(routes.pug.watch, buildPug); */
   gulp.watch(routes.scss.watch, buildScss);
   gulp.watch(routes.js.watch, buildJs);
   gulp.watch(routes.server.watch, runServer);
@@ -98,5 +98,5 @@ export const build = gulp.series([
 ]);
 const post = gulp.series([runServer, watch]);
 
-export const dev = gulp.series([prepare, build, post]);
+export const dev = gulp.series([build, post]);
 export const deploy = gulp.series([prepare, build, cleanPublish]);
