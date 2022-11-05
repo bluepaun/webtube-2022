@@ -2,27 +2,45 @@ const fakeUser = {
   username: "Jungwoo",
   logined: false,
 };
+let videos = [
+  { title: "one", id: 1, views: 3, comments: 2 },
+  { title: "two", id: 2, views: 1, comments: 3 },
+  { title: "three", id: 3, views: 1000, comments: 3 },
+];
 
 export const trending = (_, res) => {
-  const videos = [
-    { title: "one", id: 1, comments: 2 },
-    { title: "two", id: 2, comments: 3 },
-  ];
   return res.render("home", { pageTitle: "home", videos });
 };
 
-export const see = (req, res) => {
+export const watch = (req, res) => {
   const {
     params: { id },
   } = req;
-  return res.render("watch", { pageTitle: `watch ${id}` });
+  const video = videos.find((v) => {
+    return v.id === parseInt(id);
+  });
+  return res.render("watch", { pageTitle: `watch ${video.title}`, video });
 };
 
-export const edit = (req, res) => {
-  return res.render("edit", { pageTitle: `edit` });
+export const getEdit = (req, res) => {
+  const {
+    params: { id },
+  } = req;
+  const video = videos.find((v) => v.id === parseInt(id));
+  return res.render("edit", { pageTitle: `edit ${video.title}`, video });
+};
+export const postEdit = (req, res) => {
+  const {
+    params: { id },
+    body: { title },
+  } = req;
+  console.log(title);
+  const video = videos.find((v) => v.id === parseInt(id));
+  video.title = title;
+  console.log(videos);
+  return res.redirect(`/videos/${id}`);
 };
 
 export const search = (req, res) => res.send("search");
 export const deleteVideo = (req, res) => res.send("delete");
-
 export const upload = (req, res) => res.send("upload");

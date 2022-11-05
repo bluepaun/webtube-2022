@@ -15,9 +15,9 @@ const scss = gsass(sass);
 
 const routes = {
   pug: {
-    src: "src/*.pug",
+    src: "src/client/views/*.pug",
     dest: "build/",
-    watch: "src/**/*.pug",
+    watch: "src/client/views/**/*.pug",
   },
   scss: {
     src: "src/scss/style.scss",
@@ -94,6 +94,7 @@ const cleanPublish = async () => await deleteSync([".publish"]);
 const prepare = gulp.series([clean]);
 export const build = gulp.series([
   prepare,
+  /* gulp.parallel(buildPug), */
   /* gulp.parallel(buildPug, buildScss, buildJs, buildImg), */
 ]);
 const post = gulp.series([runServer, watch]);
