@@ -44,12 +44,7 @@ export const postUpload = async (req, res) => {
     await videoModel.create({
       title,
       description,
-      /* createAt: Date.now(), */
       hashtags,
-      meta: {
-        views: 0,
-        rating: 0,
-      },
     });
   } catch (err) {
     return res.render("upload", {
