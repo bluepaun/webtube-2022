@@ -1,8 +1,8 @@
 extends layouts/base.pug
 
 block body
-  h4 #{video.views} #{video.views === 1? "view" : "views"}
-  li=video.comments
-  li=video.id
-  a(href=`${video.id}/edit`) Edit video &rarr;
+  p=video.description
+  small=video.createdAt
+  div
+    a(href=`${video.id}/edit`) Edit video &rarr;
   
