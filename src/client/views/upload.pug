@@ -5,7 +5,7 @@ block body
   if errorMessage
     span=errorMessage
   form(method="POST")
-    input(name="title" placeholder="Title" required type="text")
-    input(name="description" placeholder="Description" required type="text")
+    input(name="title" placeholder="Title" required type="text" maxlength="80")
+    input(name="description" placeholder="Description" required type="text" minlength="10")
     input(name="hashtags" placeholder="HashTags separated by comma." required type="text")
     input(type="submit" value="upload video")
