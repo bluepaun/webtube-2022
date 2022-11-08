@@ -35,7 +35,7 @@ const routes = {
     watch: "src/resources/images/*",
   },
   server: {
-    src: "src/server/server.js",
+    src: "src/server/init.js",
     watch: "src/server/**/*.js",
   },
 };

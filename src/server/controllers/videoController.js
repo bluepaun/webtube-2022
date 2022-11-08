@@ -1,43 +1,33 @@
-const fakeUser = {
-  username: "Jungwoo",
-  logined: false,
-};
-let videos = [
-  { title: "one", id: 1, views: 3, comments: 2 },
-  { title: "two", id: 2, views: 1, comments: 3 },
-  { title: "three", id: 3, views: 1000, comments: 3 },
-];
+import videoModel from "../models/videoModel.js";
 
-export const trending = (_, res) => {
-  return res.render("home", { pageTitle: "home", videos });
+export const home = async (_, res) => {
+  try {
+    const videos = await videoModel.find({});
+    return res.render("home", { pageTitle: "home", videos });
+  } catch (err) {
+    console.log(err);
+    return res.send("error", err);
+  }
 };
 
 export const watch = (req, res) => {
   const {
     params: { id },
   } = req;
-  const video = videos.find((v) => {
-    return v.id === parseInt(id);
-  });
-  return res.render("watch", { pageTitle: `watch ${video.title}`, video });
+  return res.render("watch", { pageTitle: `watch ` });
 };
 
 export const getEdit = (req, res) => {
   const {
     params: { id },
   } = req;
-  const video = videos.find((v) => v.id === parseInt(id));
-  return res.render("edit", { pageTitle: `edit ${video.title}`, video });
+  return res.render("edit", { pageTitle: `edit` });
 };
 export const postEdit = (req, res) => {
   const {
     params: { id },
     body: { title },
   } = req;
-  console.log(title);
-  const video = videos.find((v) => v.id === parseInt(id));
-  video.title = title;
-  console.log(videos);
   return res.redirect(`/videos/${id}`);
 };
 
@@ -45,15 +35,27 @@ export const search = (req, res) => res.send("search");
 export const deleteVideo = (req, res) => res.send("delete");
 export const getUpload = (req, res) =>
   res.render("upload", { pageTitle: "upload" });
-export const postUpload = (req, res) => {
+export const postUpload = async (req, res) => {
   const {
-    body: { title },
+    body: { title, description, hashtags: hashtagsStr },
   } = req;
-  videos.push({
-    title,
-    id: videos[videos.length - 1].id + 1,
-    views: 0,
-    comments: 0,
-  });
+  const hashtags = hashtagsStr.split(",").map((word) => `#${word}`);
+  try {
+    await videoModel.create({
+      title,
+      description,
+      /* createAt: Date.now(), */
+      hashtags,
+      meta: {
+        views: 0,
+        rating: 0,
+      },
+    });
+  } catch (err) {
+    return res.render("upload", {
+      pageTitle: "upload",
+      errorMessage: err._message,
+    });
+  }
   return res.redirect("/");
 };
