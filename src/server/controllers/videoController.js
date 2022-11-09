@@ -15,20 +15,44 @@ export const watch = async (req, res) => {
     params: { id },
   } = req;
   const video = await videoModel.findById(id);
+  if (!video) {
+    return res.render("404", { pagetTitle: "not find" });
+  }
+
   return res.render("watch", { pageTitle: video.title, video });
 };
 
-export const getEdit = (req, res) => {
+export const getEdit = async (req, res) => {
   const {
     params: { id },
   } = req;
-  return res.render("edit", { pageTitle: `edit` });
+  const video = await videoModel.findById(id);
+  if (!video) {
+    return res.render("404", { pagetTitle: "not find" });
+  }
+  return res.render("edit", { pageTitle: `edit ${video.title}`, video });
 };
-export const postEdit = (req, res) => {
+export const postEdit = async (req, res) => {
   const {
     params: { id },
-    body: { title },
+    body,
   } = req;
+
+  const isVideo = await videoModel.exists({ _id: id });
+  if (!isVideo) {
+    return res.render("404", { pagetTitle: "not find" });
+  }
+
+  const {
+    body: { title, description, hashtags },
+  } = req;
+
+  await videoModel.findByIdAndUpdate(id, {
+    title,
+    description,
+    hashtags,
+  });
+
   return res.redirect(`/videos/${id}`);
 };
 
@@ -38,9 +62,8 @@ export const getUpload = (req, res) =>
   res.render("upload", { pageTitle: "upload" });
 export const postUpload = async (req, res) => {
   const {
-    body: { title, description, hashtags: hashtagsStr },
+    body: { title, description, hashtags },
   } = req;
-  const hashtags = hashtagsStr.split(",").map((word) => `#${word}`);
   try {
     await videoModel.create({
       title,

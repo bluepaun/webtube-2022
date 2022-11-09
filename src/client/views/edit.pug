@@ -1,8 +1,10 @@
 extends layouts/base.pug
 
 block body
-  h2 change title
+  h2 update video
   form(method="POST")
-    input(name="title" type="text" value=`${video.title}` required)
+    input(name="title" type="text" value=video.title required)
+    input(name="description" placeholder="Description" required type="text" minlength="10" value=video.description)
+    input(name="hashtags" placeholder="HashTags separated by comma." required type="text" value=video.hashtags.join())
     input(type="submit" value="save")
   
