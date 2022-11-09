@@ -3,6 +3,9 @@ extends layouts/base.pug
 block body
   p=video.description
   small=video.createdAt
+  ul
+    each h in video.hashtags
+      li=h
   div
     a(href=`${video.id}/edit`) Edit video &rarr;
   
