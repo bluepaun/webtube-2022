@@ -2,7 +2,7 @@ import videoModel from "../models/videoModel.js";
 
 export const home = async (_, res) => {
   try {
-    const videos = await videoModel.find({});
+    const videos = await videoModel.find({}).sort({ createdAt: "desc" });
     return res.render("home", { pageTitle: "home", videos });
   } catch (err) {
     console.log(err);
@@ -56,7 +56,20 @@ export const postEdit = async (req, res) => {
   return res.redirect(`/videos/${id}`);
 };
 
-export const search = (req, res) => res.send("search");
+export const search = async (req, res) => {
+  const {
+    query: { s },
+  } = req;
+  let videos = [];
+  if (s) {
+    videos = await videoModel.find({
+      title: {
+        $regex: new RegExp(s, "i"),
+      },
+    });
+  }
+  return res.render("search", { pageTitle: "Search", videos });
+};
 
 export const deleteVideo = async (req, res) => {
   const {

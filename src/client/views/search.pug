@@ -1,0 +1,12 @@
+extends layouts/base.pug
+include mixins/video.pug
+
+block body
+  form
+    input(placeholder="search by title" type="text" name="s")
+    input(type="submit" value="search")
+
+  each video in videos
+    +video(video)
+  else
+    span no vidoes
