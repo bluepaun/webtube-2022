@@ -1,5 +1,6 @@
 import "./db.js";
 import "./models/videoModel.js";
+import "./models/User.js";
 
 import server from "./server.js";
 
