@@ -7,8 +7,25 @@ export const see = (req, res) => {
 export const getJoin = (req, res) => res.render("join", { pageTitle: "join" });
 export const postJoin = async (req, res) => {
   const {
-    body: { email, username, password, name, location },
+    body: { email, username, password, passwordConfirm, name, location },
   } = req;
+  if (password !== passwordConfirm) {
+    return res.render("join", {
+      pageTitle: "join",
+      errorMessage: "password confirmation does not match",
+    });
+  }
+
+  const isExists = await User.exists({
+    $or: [{ username }, { email }],
+  });
+  if (isExists) {
+    return res.render("join", {
+      pageTitle: "join",
+      errorMessage: "This username/email is already taken",
+    });
+  }
+
   await User.create({
     email,
     username,
