@@ -1,7 +1,7 @@
 doctype html
 html(lang="en")
   head
-    title #{pageTitle} | Webute
+    title #{pageTitle} | #{siteName}
     link(rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css")
   body
     header
@@ -14,10 +14,17 @@ html(lang="en")
             a(href="/videos/upload") upload video
           li
             a(href="/search") Search
-          li
-            a(href="/join") Join
-          li
-            a(href="/login") Login
+          if !loggedIn
+            li
+              a(href="/join") Join
+            li
+              a(href="/login") Login
+          else
+            li
+              a(href="/logout") Logout
+            li 
+              a(href="/user") #{loggedInUser.name} profile
+            
     main
       block body
   include ../partials/footer.pug

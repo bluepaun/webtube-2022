@@ -1,6 +1,6 @@
 import videoModel from "../models/videoModel.js";
 
-export const home = async (_, res) => {
+export const home = async (req, res) => {
   try {
     const videos = await videoModel.find({}).sort({ createdAt: "desc" });
     return res.render("home", { pageTitle: "home", videos });
