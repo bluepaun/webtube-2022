@@ -77,7 +77,10 @@ export const postLogin = async (req, res) => {
   res.redirect("/");
 };
 
-export const logout = (req, res) => res.send("logout");
+export const logout = (req, res) => {
+  req.session.destroy();
+  return res.redirect("/");
+};
 
 export const startGithubLogin = (req, res) => {
   const baseUrl = "https://github.com/login/oauth/authorize";
@@ -144,21 +147,19 @@ export const finishGithubLogin = async (req, res) => {
     if (!emailObj) {
       return res.redirect("/login");
     }
-    const existingUser = await User.findOne({ email: emailObj.email });
-    if (existingUser) {
-      req.session.loggedIn = true;
-      req.session.user = existingUser;
-    } else {
+    let user = await User.findOne({ email: emailObj.email });
+    if (!user) {
       const user = await User.create({
         email: emailObj.email,
         socialOnly: true,
         username: userData.login,
         name: userData.name ? userData.name : "Unknow",
         location: userData.location ? userData.location : "Unknow",
+        avatarUrl: userData.avatar_url,
       });
-      req.session.loggedIn = true;
-      req.session.user = user;
     }
+    req.session.loggedIn = true;
+    req.session.user = user;
     return res.redirect("/");
   } else {
     return res.redirect("/login");
