@@ -21,6 +21,8 @@ html(lang="en")
               a(href="/login") Login
           else
             li
+              a(href="/users/edit") Edit #{loggedInUser.name} profile
+            li
               a(href="/users/logout") Logout
             li 
               a(href="/user") #{loggedInUser.name} profile

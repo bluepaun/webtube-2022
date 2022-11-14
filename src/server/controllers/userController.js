@@ -45,7 +45,10 @@ export const postJoin = async (req, res) => {
 
   return res.redirect("/login");
 };
-export const edit = (req, res) => res.send("edit user");
+export const getEdit = (req, res) => {
+  return res.render("edit-profile", { pageTitle: "Edit Profile" });
+};
+export const postEdit = (req, res) => {};
 export const remove = (req, res) => res.send("remove user");
 
 export const getLogin = (req, res) => {
