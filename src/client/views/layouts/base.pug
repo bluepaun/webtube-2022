@@ -11,8 +11,6 @@ html(lang="en")
           li
             a(href="/") home
           li
-            a(href="/videos/upload") upload video
-          li
             a(href="/search") Search
           if !loggedIn
             li
@@ -26,6 +24,8 @@ html(lang="en")
               a(href="/users/logout") Logout
             li 
               a(href="/user") #{loggedInUser.name} profile
+            li
+              a(href="/videos/upload") upload video
             
     main
       block body

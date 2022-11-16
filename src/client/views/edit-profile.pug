@@ -1,9 +1,14 @@
 extends layouts/base.pug
 
 block body
-  form(method="POST")
+  form(method="POST" enctype="multipart/form-data")
+    label(for="avatar") avatar
+    input(name="avatar" id="avatar" type="file" accept="image/*")
     input(name="email" type="email" required value=loggedInUser.email placeholder="Email")
     input(name="username" type="text" required value=loggedInUser.username placeholder="Username")
     input(name="name" type="text" required value=loggedInUser.name placeholder="Name")
     input(name="location" type="text" required value=loggedInUser.location placeholder="Location")
     input(type="submit" value="Update Profile")
+    if !loggedInUser.socialOnly
+      hr
+      a(href="change-password") Change password
