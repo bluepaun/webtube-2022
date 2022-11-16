@@ -52,12 +52,15 @@ export const postEdit = async (req, res) => {
   const {
     body: { email, username, name, location },
     session: {
-      user: { _id: id, username: orignalUsername, email: orignalEmail },
+      user: {
+        _id: id,
+        username: orignalUsername,
+        email: orignalEmail,
+        avatarUrl,
+      },
     },
     file,
   } = req;
-
-  console.log(file);
 
   if (email !== orignalEmail) {
     const exists = await User.exists({ email });
@@ -83,6 +86,7 @@ export const postEdit = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       id,
       {
+        avatarUrl: file ? file.path : avatarUrl,
         email,
         username,
         name,
@@ -180,7 +184,6 @@ export const finishGithubLogin = async (req, res) => {
       },
     })
   ).json();
-  /* console.log(json); */
   if ("access_token" in tokenRequest) {
     const { access_token } = tokenRequest;
     const apiUrl = "https://api.github.com";
@@ -192,7 +195,6 @@ export const finishGithubLogin = async (req, res) => {
         },
       })
     ).json();
-    console.log(userData);
     const emailUrl = "/user/emails";
     const emailData = await (
       await fetch(`${apiUrl}${emailUrl}`, {
@@ -209,7 +211,7 @@ export const finishGithubLogin = async (req, res) => {
     }
     let user = await User.findOne({ email: emailObj.email });
     if (!user) {
-      const user = await User.create({
+      user = await User.create({
         email: emailObj.email,
         socialOnly: true,
         username: userData.login,
