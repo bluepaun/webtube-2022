@@ -23,7 +23,7 @@ html(lang="en")
             li
               a(href="/users/logout") Logout
             li 
-              a(href="/user") #{loggedInUser.name} profile
+              a(href=`/users/${loggedInUser._id}`) My profile
             li
               a(href="/videos/upload") upload video
             

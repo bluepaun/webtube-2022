@@ -1,4 +1,5 @@
 import videoModel from "../models/videoModel.js";
+import User from "../models/User.js";
 
 export const home = async (req, res) => {
   try {
@@ -14,7 +15,7 @@ export const watch = async (req, res) => {
   const {
     params: { id },
   } = req;
-  const video = await videoModel.findById(id);
+  const video = await videoModel.findById(id).populate("owner");
   if (!video) {
     return res.status(404).render("404", { pagetTitle: "not find" });
   }
@@ -87,6 +88,9 @@ export const postUpload = async (req, res) => {
   const {
     body: { title, description, hashtags },
     file: { path: fileUrl },
+    session: {
+      user: { _id },
+    },
   } = req;
   try {
     await videoModel.create({
@@ -94,6 +98,7 @@ export const postUpload = async (req, res) => {
       description,
       hashtags: videoModel.formatHashtags(hashtags),
       fileUrl,
+      owner: _id,
     });
   } catch (err) {
     return res.status(400).render("upload", {

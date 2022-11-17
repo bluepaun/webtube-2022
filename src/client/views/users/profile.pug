@@ -1,0 +1,9 @@
+extends ../layouts/base.pug
+
+block body
+  if user.avatarUrl
+    img(src="/"+user.avatarUrl width="100" height="100")
+  h2=user.username
+  h3=user.name
+  h3=user.location
+

@@ -2,9 +2,18 @@ import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import fetch from "node-fetch";
 
-export const see = (req, res) => {
-  console.log(res.params);
-  return res.send("watch user");
+export const see = async (req, res) => {
+  const {
+    params: { id },
+  } = req;
+
+  const user = await User.findById(id);
+
+  if (!user) {
+    return res.status(404).render("404", { pageTitle: "404" });
+  }
+
+  return res.render("users/profile", { pageTitle: user.name, user });
 };
 export const getJoin = (req, res) => res.render("join", { pageTitle: "join" });
 export const postJoin = async (req, res) => {
