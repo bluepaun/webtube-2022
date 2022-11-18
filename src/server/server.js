@@ -29,6 +29,8 @@ app.use(
 app.use(localsMiddleware);
 
 app.use("/uploads", express.static("uploads"));
+app.use("/js", express.static("build/js"));
+app.use("/css", express.static("build/css"));
 
 app.use("/", rootRouter);
 app.use("/users", userRouter);

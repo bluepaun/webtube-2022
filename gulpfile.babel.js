@@ -10,6 +10,7 @@ import source from "vinyl-source-stream";
 import buffer from "vinyl-buffer";
 import GulpImage from "gulp-image";
 import cp from "child_process";
+import minify from "gulp-minify";
 
 const scss = gsass(sass);
 
@@ -20,14 +21,14 @@ const routes = {
     watch: "src/client/views/**/*.pug",
   },
   scss: {
-    src: "src/scss/style.scss",
+    src: "src/client/scss/style.scss",
     dest: "build/css",
-    watch: "src/scss/**/*.scss",
+    watch: "src/client/scss/**/*.scss",
   },
   js: {
-    src: "src/js/app.js",
+    src: "src/client/js/main.js",
     dest: "build/js",
-    watch: "src/js/**/*.js",
+    watch: "src/client/js/**/*.js",
   },
   img: {
     src: "src/resources/images/*",
@@ -66,8 +67,16 @@ const buildJs = () =>
       console.error(err);
       this.emit("end");
     })
-    .pipe(source("app.js"))
+    .pipe(source("main.js"))
     .pipe(buffer())
+    .pipe(
+      minify({
+        ext: {
+          src: "-debug.js",
+          min: ".js",
+        },
+      })
+    )
     .pipe(gulp.dest(routes.js.dest));
 
 const buildImg = () =>
@@ -94,8 +103,12 @@ const cleanPublish = async () => await deleteSync([".publish"]);
 const prepare = gulp.series([clean]);
 export const build = gulp.series([
   prepare,
-  /* gulp.parallel(buildPug), */
-  /* gulp.parallel(buildPug, buildScss, buildJs, buildImg), */
+  gulp.parallel(
+    /* buildPug,  */
+    buildScss,
+    buildJs
+    /* buildImg */
+  ),
 ]);
 const post = gulp.series([runServer, watch]);
 
