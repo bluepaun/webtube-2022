@@ -31,6 +31,11 @@ export const getEdit = async (req, res) => {
   if (!video) {
     return res.status(404).render("404", { pagetTitle: "not find" });
   }
+
+  if (!req.session.user || String(video.owner) !== req.session.user._id) {
+    return res.status(403).redirect("/");
+  }
+
   return res.render("edit", { pageTitle: `edit ${video.title}`, video });
 };
 export const postEdit = async (req, res) => {
@@ -39,9 +44,13 @@ export const postEdit = async (req, res) => {
     body,
   } = req;
 
-  const isVideo = await videoModel.exists({ _id: id });
-  if (!isVideo) {
+  const video = await videoModel.findById(id);
+  if (!video) {
     return res.status(404).render("404", { pagetTitle: "not find" });
+  }
+
+  if (!req.session.user || String(video.owner) !== req.session.user._id) {
+    return res.status(403).redirect("/");
   }
 
   const {
@@ -76,7 +85,22 @@ export const deleteVideo = async (req, res) => {
   const {
     params: { id },
   } = req;
+
+  const video = await videoModel.findById(id);
+
+  if (!video) {
+    return res.status(404).render("404", { pageTitle: "404" });
+  }
+
+  if (!req.session.user || String(video.owner) !== req.session.user._id) {
+    return res.status(403).redirect("/");
+  }
+
+  const user = await User.findById(req.session.user._id);
+
   await videoModel.findByIdAndDelete(id);
+  user.videos.splice(user.videos.indexOf(id), 1);
+  user.save();
 
   return res.redirect("/");
 };
@@ -93,13 +117,17 @@ export const postUpload = async (req, res) => {
     },
   } = req;
   try {
-    await videoModel.create({
+    const newVideo = await videoModel.create({
       title,
       description,
       hashtags: videoModel.formatHashtags(hashtags),
       fileUrl,
       owner: _id,
     });
+
+    const user = await User.findById(_id);
+    user.videos.push(newVideo._id);
+    user.save();
   } catch (err) {
     return res.status(400).render("upload", {
       pageTitle: "upload",

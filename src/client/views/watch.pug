@@ -5,7 +5,8 @@ block body
   p=video.description
   small=video.createdAt
   br
-  small Uploaded by #{video.owner.username}
+  small Uploaded by 
+    a(href=`/users/${video.owner._id}`)=video.owner.username
   ul
     each h in video.hashtags
       li=h
