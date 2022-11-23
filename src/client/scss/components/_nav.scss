@@ -1,0 +1,68 @@
+$buttonHeight: 2.5rem;
+$buttonWidth: 3rem;
+
+nav {
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+  height: 4em;
+  background-color: #ffffff;
+  border-radius: 30px 30px 0 0;
+  box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.05);
+  padding: 0.3rem 0;
+
+  .nav__item {
+    cursor: pointer;
+    width: $buttonWidth;
+    height: $buttonHeight;
+    border-radius: 20px;
+    background: transparent;
+    transition: all 0.25s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    i {
+      font-size: 1.5rem;
+      pointer-events: none;
+    }
+
+    img {
+      object-fit: cover;
+      width: 1.7rem;
+      height: 1.7rem;
+      border-radius: 50%;
+    }
+    &:active:not(.plus) {
+      transform: scale(1.2);
+    }
+    &.active {
+      color: #e84c4f;
+    }
+
+    &.plus {
+      height: $buttonWidth;
+      color: white;
+      background-color: #e84c4f;
+      border-radius: 20px;
+      margin-top: -3rem;
+      box-shadow: 0 10px 20px 0 #e84c4f33;
+      &:hover {
+        transform: translateY(-4px);
+      }
+    }
+  }
+
+  .effect {
+    position: absolute;
+    width: $buttonWidth;
+    height: $buttonHeight;
+    border-radius: 18px;
+    background-color: #e84c4f26;
+    opacity: 0;
+    pointer-events: none;
+  }
+}

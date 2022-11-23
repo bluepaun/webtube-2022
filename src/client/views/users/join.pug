@@ -1,0 +1,35 @@
+extends ../layouts/base.pug
+
+block content
+  div.assign(style="height: 600px")
+    div.assign-box
+      form(method="POST")
+        div.input-box
+          input(name="email" type="email" required)
+          span Email
+          i
+        div.input-box
+          input(name="username" type="text" required )
+          span Username
+          i
+        div.input-box
+          input(name="password" type="password" required)
+          span Password
+          i
+        div.input-box
+          input(name="passwordConfirm" type="password" required)
+          span Password Confirm
+          i
+        div.input-box
+          input(name="name" type="text" required)
+          span Name
+          i
+        div.input-box
+          input(name="location" type="text" required)
+          span Location
+          i
+        button Join
+          i
+      div.join-now
+        span Already have an account?
+        a(href="/login") Login now &rarr;

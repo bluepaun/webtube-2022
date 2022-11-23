@@ -1,0 +1,203 @@
+@keyframes rotateAni {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+main:has(.assign) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.assign {
+  margin: 0px 30px;
+  position: relative;
+  width: 300px;
+  min-height: 400px;
+  overflow: hidden;
+  z-index: 0;
+  padding: 3px;
+  border-radius: 8px;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(0deg, transparent, $red, $red);
+    transform-origin: bottom right;
+    animation: rotateAni 5s linear infinite;
+    z-index: 0;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(0deg, transparent, $red, $red);
+    transform-origin: bottom right;
+    animation: rotateAni 5s linear infinite;
+    animation-delay: -2.5s;
+    z-index: 0;
+  }
+
+  .assign-box {
+    position: absolute;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 2;
+    width: calc(100% - 6px);
+    height: calc(100% - 6px);
+    border-radius: 8px;
+    padding: 5px 0 20px 0;
+
+    form {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .input-box {
+      position: relative;
+      margin-top: 25px;
+      width: 100%;
+      input {
+        height: 50px;
+        width: 100%;
+        font-size: 1.3em;
+        position: relative;
+        padding: 20px 10px 10px;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        outline: none;
+        color: var(--bg-black);
+        z-index: 2;
+        color: white;
+        &:valid ~ span,
+        &:focus ~ span {
+          color: $red;
+          transform: translateX(-10px) translateY(-90%);
+          font-size: 1em;
+        }
+        &:valid ~ i,
+        &:focus ~ i {
+          height: 100%;
+        }
+
+        &:invalid:not(:focus) {
+          color: transparent;
+        }
+      }
+      span {
+        position: absolute;
+        top: 0;
+        left: 0;
+        color: #8f8f8f;
+        padding: 20px 10px 10px;
+        font-size: 1.3em;
+        transition: 0.5s;
+        pointer-events: none;
+      }
+      i {
+        position: absolute;
+        height: 2px;
+        width: 100%;
+        left: 0;
+        bottom: 0;
+        background-color: $red;
+        border-radius: 4px;
+        pointer-events: none;
+        transition: 0.5s;
+      }
+    }
+    button {
+      border: none;
+      height: 50px;
+      margin: 29px auto;
+      font-size: 18px;
+      width: 80%;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 10px 30px;
+      transition: color 0.5s, letter-spacing 0.5s, border-color 0.5s;
+      background-color: var(--bg-black);
+      position: relative;
+      border: 2px solid black;
+      color: black;
+
+      &:hover {
+        letter-spacing: 0.25em;
+        border-color: $red;
+        box-shadow: 0px 0px 25px $red;
+        color: $red;
+
+        i:before {
+          width: 20px;
+          left: 20%;
+        }
+        i:after {
+          width: 20px;
+          left: 80%;
+        }
+      }
+
+      i {
+        position: absolute;
+        display: block;
+        inset: 0px;
+        &:before {
+          content: "";
+          position: absolute;
+          top: -2px;
+          left: 80%;
+          width: 10px;
+          height: 4px;
+          background-color: white;
+          transform: skewX(325deg) translateX(-50%);
+          transition: 0.5s;
+        }
+
+        &:after {
+          content: "";
+          position: absolute;
+          bottom: -2px;
+          left: 20%;
+          width: 10px;
+          height: 4px;
+          background-color: white;
+          transform: skewX(325deg) translateX(-50%);
+          transition: 0.5s;
+        }
+      }
+    }
+    .join-now,
+    .social-login {
+      a {
+        color: $red;
+        opacity: 0.5;
+        transition: all 0.3s;
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}

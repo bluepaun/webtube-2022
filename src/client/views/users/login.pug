@@ -1,0 +1,21 @@
+extends ../layouts/base.pug
+
+block content
+  div.assign
+    div.assign-box
+      form(method="POST")
+        div.input-box
+          input(name="username" type="text" required )
+          span Username
+          i
+        div.input-box
+          input(name="password" type="password" required )
+          span Password
+          i
+        button Log in
+          i
+      div.social-login
+        a(href="/users/github/start") Continue with Github
+      div.join-now
+        span Don't have an account? 
+        a(href="/join") Join now &rarr;

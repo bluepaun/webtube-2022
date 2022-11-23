@@ -1,6 +1,1 @@
-const hello = async () => {
-  console.log("hello");
-  await fetch("");
-};
-
-hello();
+console.log("hi");

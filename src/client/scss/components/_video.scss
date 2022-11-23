@@ -1,0 +1,25 @@
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-auto-rows: 20px;
+
+  padding: 0.3em;
+  gap: 0.3em;
+}
+
+.video {
+  background-color: white;
+  border-radius: 0.3em;
+  overflow: hidden;
+  .video__thumbnail {
+    background-color: hsl(100, 0%, 10%);
+    width: 100%;
+    padding-top: 133%;
+  }
+
+  .video__landscape {
+    .video__thumbnail {
+      padding-top: 56%;
+    }
+  }
+}

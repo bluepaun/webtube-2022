@@ -1,0 +1,32 @@
+.watch-content {
+  width: 100%;
+  video {
+    width: 100%;
+    max-height: 60vh;
+  }
+  h2 {
+    padding-top: 1rem;
+    font-size: 2em;
+  }
+  p {
+    padding-top: 1rem;
+  }
+
+  small {
+    opacity: 0.5;
+    font-size: 0.5rem;
+  }
+
+  ul {
+    display: flex;
+    gap: 0.2em;
+    padding-top: 1rem;
+    li {
+      background-color: rgba(0, 0, 0, 0.2);
+      color: white;
+      padding: 0.3em;
+      font-size: 0.8em;
+      border-radius: 1em;
+    }
+  }
+}

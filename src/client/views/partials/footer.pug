@@ -1,1 +1,21 @@
-footer &copy; #{new Date().getFullYear()} Wetube
+footer 
+  nav 
+    div.effect
+    a.nav__item(href="/" data-menu="home")
+      i(class="bx bx-home") 
+    a.nav__item(href="/search" data-menu="search")
+      i(class="bx bx-search-alt") 
+    a.nav__item.plus(href="/videos/upload" data-menu="upload")
+      i(class="bx bx-plus") 
+    a.nav__item(href="" data-menu="camera")
+      i(class="bx bx-camera") 
+    if loggedIn
+      if loggedInUser.avatarUrl
+        a.nav__item(href=`/users/${loggedInUser._id}` data-menu="profile")
+          img(src=`${loggedInUser.avatarUrl.includes("http") ? "" : "/"}${loggedInUser.avatarUrl}` )
+      else
+        a.nav__item(href=`/users/${loggedInUser._id}` data-menu="profile")
+          i(class="bx bx-user") 
+    else
+      a.nav__item(href="/login" data-menu="login")
+        i(class="bx bx-user") 

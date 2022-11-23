@@ -11,8 +11,36 @@ import buffer from "vinyl-buffer";
 import GulpImage from "gulp-image";
 import cp from "child_process";
 import minify from "gulp-minify";
+import through from "through2";
 
 const scss = gsass(sass);
+
+const bro = () => {
+  return through.obj((file, enc, cb) => {
+    const filename = file.path;
+    let compiled;
+
+    browserify(filename)
+      .transform("babelify", { presets: ["@babel/preset-env"] })
+      .bundle()
+      .on("error", (err) => {
+        console.error(err);
+        newErr = err;
+        this.emit("end");
+      })
+      .on("data", (chunck) => {
+        if (compiled === undefined) {
+          compiled = chunck;
+        } else {
+          compiled = Buffer.concat([compiled, chunck]);
+        }
+      })
+      .on("end", () => {
+        file.contents = compiled;
+        return cb(null, file);
+      });
+  });
+};
 
 const routes = {
   pug: {
@@ -26,7 +54,7 @@ const routes = {
     watch: "src/client/scss/**/*.scss",
   },
   js: {
-    src: "src/client/js/main.js",
+    src: "src/client/js/**/*.js",
     dest: "build/js",
     watch: "src/client/js/**/*.js",
   },
@@ -59,25 +87,10 @@ const buildScss = () =>
     .pipe(csso())
     .pipe(gulp.dest(routes.scss.dest));
 
-const buildJs = () =>
-  browserify(routes.js.src)
-    .transform("babelify", { presets: ["@babel/preset-env"] })
-    .bundle()
-    .on("error", function (err) {
-      console.error(err);
-      this.emit("end");
-    })
-    .pipe(source("main.js"))
-    .pipe(buffer())
-    .pipe(
-      minify({
-        ext: {
-          src: "-debug.js",
-          min: ".js",
-        },
-      })
-    )
-    .pipe(gulp.dest(routes.js.dest));
+const buildJs = () => {
+  /* console.log("js"); */
+  return gulp.src(routes.js.src).pipe(bro()).pipe(gulp.dest(routes.js.dest));
+};
 
 const buildImg = () =>
   gulp.src(routes.img.src).pipe(GulpImage()).pipe(gulp.dest(routes.img.dest));

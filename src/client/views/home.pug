@@ -1,9 +1,11 @@
 extends layouts/base.pug
 include mixins/video.pug
 
-block body
-  h1 home
-  ul
+block scripts
+  script(defer src="/js/views/masonry.js")
+
+block content
+  div.video-grid
     each info in videos
       +video(info)
     else

@@ -2,33 +2,12 @@ doctype html
 html(lang="en")
   head
     title #{pageTitle} | #{siteName}
-    link(rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css")
-    script(defer src="/js/main.js")
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    link(href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css", rel="stylesheet")
     link(rel="stylesheet" href="/css/style.css")
+    block scripts
   body
-    header
-      h1=pageTitle
-      nav
-        ul
-          li
-            a(href="/") home
-          li
-            a(href="/search") Search
-          if !loggedIn
-            li
-              a(href="/join") Join
-            li
-              a(href="/login") Login
-          else
-            li
-              a(href="/users/edit") Edit #{loggedInUser.name} profile
-            li
-              a(href="/users/logout") Logout
-            li 
-              a(href=`/users/${loggedInUser._id}`) My profile
-            li
-              a(href="/videos/upload") upload video
-            
     main
-      block body
-  include ../partials/footer.pug
+      block content
+    include ../partials/footer.pug

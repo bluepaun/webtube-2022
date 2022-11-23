@@ -1,13 +1,30 @@
 extends ../layouts/base.pug
 include ../mixins/video.pug
 
-block body
-  if user.avatarUrl
-    img(src=`${user.avatarUrl.includes("http") ? "" : "/"}${user.avatarUrl}` width="100" height="100")
-  h2=user.username
-  h3=user.name
-  h3=user.location
-  ul
+block scripts
+  script(defer src="/js/views/masonry.js")
+
+block content
+  div.profile
+    div.profile__avatar
+      if user.avatarUrl
+        img(src=`${user.avatarUrl.includes("http") ? "" : "/"}${user.avatarUrl}` width="100" height="100")
+      else
+        i(class="bx bx-user-plus")
+    h3.profile__name=user.name
+    if loggedIn && String(loggedInUser._id) === String(user._id)
+      a.profile__action(href="/users/logout") 
+        i(class="bx bx-log-out")
+        | Logout
+    else
+      a.profile__action(href="/users/heart")
+        i(class="bx bx-heart")
+        | Like
+    span.profile__username Username: #{user.username}
+    span.profile__location Location: #{user.location}
+    if loggedIn && String(loggedInUser._id) === String(user._id)
+      a.profile__edit(href="users/edit") Edit profile
+  ul.video-grid
     each v in user.videos
       +video(v)
     else

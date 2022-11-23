@@ -1,6 +1,8 @@
 import videoModel from "../models/videoModel.js";
 import User from "../models/User.js";
 
+const VIDEO_VIEW_PREFIX = "videos/";
+
 export const home = async (req, res) => {
   try {
     const videos = await videoModel.find({}).sort({ createdAt: "desc" });
@@ -20,7 +22,10 @@ export const watch = async (req, res) => {
     return res.status(404).render("404", { pagetTitle: "not find" });
   }
 
-  return res.render("watch", { pageTitle: video.title, video });
+  return res.render(VIDEO_VIEW_PREFIX + "watch", {
+    pageTitle: video.title,
+    video,
+  });
 };
 
 export const getEdit = async (req, res) => {
@@ -36,7 +41,10 @@ export const getEdit = async (req, res) => {
     return res.status(403).redirect("/");
   }
 
-  return res.render("edit", { pageTitle: `edit ${video.title}`, video });
+  return res.render(VIDEO_VIEW_PREFIX + "edit", {
+    pageTitle: `edit ${video.title}`,
+    video,
+  });
 };
 export const postEdit = async (req, res) => {
   const {
@@ -78,7 +86,10 @@ export const search = async (req, res) => {
       },
     });
   }
-  return res.render("search", { pageTitle: "Search", videos });
+  return res.render("search", {
+    pageTitle: "Search",
+    videos,
+  });
 };
 
 export const deleteVideo = async (req, res) => {
@@ -106,7 +117,7 @@ export const deleteVideo = async (req, res) => {
 };
 
 export const getUpload = (req, res) =>
-  res.render("upload", { pageTitle: "upload" });
+  res.render(VIDEO_VIEW_PREFIX + "upload", { pageTitle: "upload" });
 
 export const postUpload = async (req, res) => {
   const {
@@ -129,7 +140,7 @@ export const postUpload = async (req, res) => {
     user.videos.push(newVideo._id);
     user.save();
   } catch (err) {
-    return res.status(400).render("upload", {
+    return res.status(400).render(VIDEO_VIEW_PREFIX + "upload", {
       pageTitle: "upload",
       errorMessage: err._message,
     });

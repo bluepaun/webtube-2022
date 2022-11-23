@@ -1,0 +1,37 @@
+extends ../layouts/base.pug
+
+block scripts
+  script(defer src="/js/views/videoPlay.js")
+
+block content
+  div.watch-content
+    div#videoContainer
+      video(src=`/${video.fileUrl}`)
+      div#videoControls
+        button#play Play
+        button#mute Mute
+        input#volume(type="range" step="any" min="0" max="1" value="0.5")
+
+        div
+          span#currentTime 0:00
+          span  / 
+          span#totalTime 0:00
+        div 
+          input#timeline(type="range" step="any" min="0" value="0")
+        div
+          button#fullScreen Full Screen
+    h2=video.title
+    p=video.description
+    small=video.createdAt
+    br
+    small Uploaded by 
+      a(href=`/users/${video.owner._id}`)=video.owner.username
+    ul
+      each h in video.hashtags
+        li=h
+    if loggedIn && String(loggedInUser._id) === String(video.owner._id)
+      div
+        a(href=`${video.id}/edit`) Edit video &rarr;
+      div
+        a(href=`${video.id}/delete`) Delete video &rarr;
+  

@@ -1,5 +1,19 @@
-@import "./_variables";
+//Cofigs
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500&display=swap");
+@import "./configs/_reset";
+@import "./configs/_variables";
+
+//Components
+@import "./components/_nav";
+@import "./components/_video";
+@import "./components/_assignForm";
+
+//Pages
+@import "./pages/_profile";
+@import "./pages/_watch";
 
 body {
-  background-color: $background;
+  font-family: "Noto Sans", sans-serif;
+  background-color: $light-purple;
+  padding-bottom: 5em;
 }
