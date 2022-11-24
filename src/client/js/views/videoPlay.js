@@ -14,6 +14,14 @@ video.volume = volumeValue;
 
 let controlsTimeoutId = null;
 
+video.addEventListener("ended", () => {
+  const {
+    dataset: { videoid },
+  } = video;
+
+  fetch(`/api/videos/${videoid}/view`, { method: "POST" });
+});
+
 function hideControls() {
   if (controlsTimeoutId) {
     clearTimeout(controlsTimeoutId);

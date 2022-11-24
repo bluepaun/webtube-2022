@@ -147,3 +147,23 @@ export const postUpload = async (req, res) => {
   }
   return res.redirect("/");
 };
+
+export const registerView = async (req, res) => {
+  const {
+    params: { id },
+  } = req;
+  console.log(id);
+  const video = await videoModel.findById(id);
+  if (!video) {
+    return res.sendStatus(404);
+  }
+
+  video.meta.views += 1;
+  await video.save();
+  return res.sendStatus(200);
+};
+
+export const getRecorder = (req, res) =>
+  res.render(VIDEO_VIEW_PREFIX + "recorder", { pageTitle: "Recorder" });
+
+export const postRecorder = (req, res) => {};

@@ -6,7 +6,7 @@ block scripts
 block content
   div.watch-content
     div#videoContainer
-      video(src=`/${video.fileUrl}`)
+      video(src=`/${video.fileUrl}` data-videoid=video._id playsinline)
       div#videoControls
         button#play Play
         button#mute Mute

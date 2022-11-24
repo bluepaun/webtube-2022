@@ -6,6 +6,8 @@ import {
   postEdit,
   getUpload,
   postUpload,
+  getRecorder,
+  postRecorder,
 } from "../controllers/videoController.js";
 import { protectorMiddleware, videoUpload } from "../middlewares.js";
 
@@ -23,5 +25,10 @@ videoRouter
   .all(protectorMiddleware)
   .get(getUpload)
   .post(videoUpload.single("video"), postUpload);
+videoRouter
+  .route("/recorder")
+  .all(protectorMiddleware)
+  .get(getRecorder)
+  .post(postRecorder);
 
 export default videoRouter;
