@@ -12,6 +12,8 @@ import GulpImage from "gulp-image";
 import cp from "child_process";
 import minify from "gulp-minify";
 import through from "through2";
+import bro2 from "gulp-bro";
+import babelify2 from "babelify";
 
 const scss = gsass(sass);
 
@@ -19,14 +21,19 @@ const bro = () => {
   return through.obj((file, enc, cb) => {
     const filename = file.path;
     let compiled;
-
+    console.log(filename);
     browserify(filename)
-      .transform("babelify", { presets: ["@babel/preset-env"] })
+      .transform("babelify", {
+        presets: ["@babel/preset-env"],
+        global: true,
+        /* sourceType: "module", */
+        /* only: [ */
+        /*   /^(?:.*\/node_modules\/(?:@ffmpeg\/ffmpeg)\/|(?!.*\/node_modules\/)).*$/, */
+        /* ], */
+      })
       .bundle()
       .on("error", (err) => {
         console.error(err);
-        newErr = err;
-        this.emit("end");
       })
       .on("data", (chunck) => {
         if (compiled === undefined) {
@@ -88,8 +95,40 @@ const buildScss = () =>
     .pipe(gulp.dest(routes.scss.dest));
 
 const buildJs = () => {
-  /* console.log("js"); */
-  return gulp.src(routes.js.src).pipe(bro()).pipe(gulp.dest(routes.js.dest));
+  console.log("js");
+  return (
+    gulp
+      .src(routes.js.src)
+      /* .pipe(bro()) */
+      .pipe(
+        bro2({
+          transform: [
+            [
+              "babelify",
+              {
+                presets: ["@babel/preset-env"],
+                global: true,
+                plugins: ["babel-plugin-transform-import-meta"],
+                /* plugins: ["babel-plugin-bundled-import-meta"], */
+                /* plugins: [ */
+                /*   [ */
+                /*     "babel-plugin-bundled-import-meta", */
+                /*     { */
+                /*       mappings: { */
+                /*         node_modules: "/assets", */
+                /*       }, */
+                /*       bundleDir: "html", */
+                /*       importStyle: "js", */
+                /*     }, */
+                /*   ], */
+                /* ], */
+              },
+            ],
+          ],
+        })
+      )
+      .pipe(gulp.dest(routes.js.dest))
+  );
 };
 
 const buildImg = () =>
