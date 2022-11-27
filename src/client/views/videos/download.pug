@@ -1,0 +1,11 @@
+doctype html
+html(lang="en")
+  head
+    title #{pageTitle} | #{siteName}
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+
+    script(defer src="/static/js/ffmpeg.min.js")
+    script(defer src="/js/download.js")
+  body(data-url=`${fileUrl}`)
+    h1 Converting...

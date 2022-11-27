@@ -1,8 +1,5 @@
-import { createFFmpeg } from "@ffmpeg/ffmpeg";
 const preview = document.getElementById("preview");
 const recordBtn = document.getElementById("record");
-
-/* import.meta.url; */
 
 let previewStream;
 async function getStream() {
@@ -25,23 +22,26 @@ let videoUrl;
 function handleDataAvailable(e) {
   const { data } = e;
   videoUrl = URL.createObjectURL(data);
-  console.log(data);
   preview.srcObject = null;
   preview.src = videoUrl;
   preview.play();
 }
 
 async function downloadRecord() {
-  const ffmpeg = createFFmpeg({ log: true });
-  await ffmpeg.load();
+  const f = document.createElement("form");
+  const input = document.createElement("input");
+  f.method = "POST";
+  f.action = "/videos/download";
+  f.target = "_blank";
+  input.type = "text";
+  input.name = "url";
+  input.value = videoUrl;
+  f.appendChild(input);
 
-  ffmpeg.FS("writeFile", `recording.webm`, await fetchFile(videoFile));
-  await ffmpeg.run("-i", "recording.webm", "output.mp4");
+  document.body.appendChild(f);
 
-  const a = document.createElement("a");
-  a.href = videoUrl;
-  a.download = `${Date.now()}.webm`;
-  a.click();
+  f.submit();
+  f.remove();
 
   preview.srcObject = previewStream;
   preview.play();

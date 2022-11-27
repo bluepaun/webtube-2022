@@ -35,3 +35,9 @@ export const videoUpload = multer({
     fileSize: 50000000,
   },
 });
+
+export const cropPolicy = (req, res, next) => {
+  res.header("Cross-Origin-Embedder-Policy", "require-corp");
+  res.header("Cross-Origin-Opener-Policy", "same-origin");
+  next();
+};

@@ -8,8 +8,13 @@ import {
   postUpload,
   getRecorder,
   postRecorder,
+  postDownload,
 } from "../controllers/videoController.js";
-import { protectorMiddleware, videoUpload } from "../middlewares.js";
+import {
+  cropPolicy,
+  protectorMiddleware,
+  videoUpload,
+} from "../middlewares.js";
 
 const videoRouter = express.Router();
 
@@ -30,5 +35,6 @@ videoRouter
   .all(protectorMiddleware)
   .get(getRecorder)
   .post(postRecorder);
+videoRouter.route("/download").all(cropPolicy).post(postDownload);
 
 export default videoRouter;

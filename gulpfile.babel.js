@@ -25,7 +25,7 @@ const bro = () => {
     browserify(filename)
       .transform("babelify", {
         presets: ["@babel/preset-env"],
-        global: true,
+        /* global: true, */
         /* sourceType: "module", */
         /* only: [ */
         /*   /^(?:.*\/node_modules\/(?:@ffmpeg\/ffmpeg)\/|(?!.*\/node_modules\/)).*$/, */
@@ -74,6 +74,10 @@ const routes = {
     src: "src/server/init.js",
     watch: "src/server/**/*.js",
   },
+  static: {
+    src: "src/static/**/*",
+    dest: "build/static/",
+  },
 };
 
 const clean = async () => await deleteSync(["build"]);
@@ -100,33 +104,7 @@ const buildJs = () => {
     gulp
       .src(routes.js.src)
       /* .pipe(bro()) */
-      .pipe(
-        bro2({
-          transform: [
-            [
-              "babelify",
-              {
-                presets: ["@babel/preset-env"],
-                global: true,
-                plugins: ["babel-plugin-transform-import-meta"],
-                /* plugins: ["babel-plugin-bundled-import-meta"], */
-                /* plugins: [ */
-                /*   [ */
-                /*     "babel-plugin-bundled-import-meta", */
-                /*     { */
-                /*       mappings: { */
-                /*         node_modules: "/assets", */
-                /*       }, */
-                /*       bundleDir: "html", */
-                /*       importStyle: "js", */
-                /*     }, */
-                /*   ], */
-                /* ], */
-              },
-            ],
-          ],
-        })
-      )
+      .pipe(bro2())
       .pipe(gulp.dest(routes.js.dest))
   );
 };
@@ -143,6 +121,9 @@ const runServer = (cb) => {
   cb();
 };
 
+const moveStatic = () =>
+  gulp.src(routes.static.src).pipe(gulp.dest(routes.static.dest));
+
 const watch = () => {
   /* gulp.watch(routes.pug.watch, buildPug); */
   gulp.watch(routes.scss.watch, buildScss);
@@ -156,6 +137,7 @@ const prepare = gulp.series([clean]);
 export const build = gulp.series([
   prepare,
   gulp.parallel(
+    moveStatic,
     /* buildPug,  */
     buildScss,
     buildJs

@@ -167,3 +167,12 @@ export const getRecorder = (req, res) =>
   res.render(VIDEO_VIEW_PREFIX + "recorder", { pageTitle: "Recorder" });
 
 export const postRecorder = (req, res) => {};
+
+export const postDownload = (req, res) => {
+  console.log(req.body);
+  const { url } = req.body;
+  res.render(VIDEO_VIEW_PREFIX + "download", {
+    pageTitle: "Download",
+    fileUrl: url,
+  });
+};
