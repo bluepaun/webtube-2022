@@ -1,15 +1,24 @@
 extends ../layouts/base.pug
 
 block content
-  img(src=`/${loggedInUser.avatarUrl}` width="100" height="100")
-  form(method="POST" enctype="multipart/form-data")
-    label(for="avatar") avatar
-    input(name="avatar" id="avatar" type="file" accept="image/*")
-    input(name="email" type="email" required value=loggedInUser.email placeholder="Email")
-    input(name="username" type="text" required value=loggedInUser.username placeholder="Username")
-    input(name="name" type="text" required value=loggedInUser.name placeholder="Name")
-    input(name="location" type="text" required value=loggedInUser.location placeholder="Location")
-    input(type="submit" value="Update Profile")
+  div.editBox
+    div.edit__avatar
+      if loggedInUser.avatarUrl
+        img(src=`${loggedInUser.avatarUrl.includes("http") ? "" : "/"}${loggedInUser.avatarUrl}` width="100" height="100")
+      else
+        i(class="bx bx-user-plus")
+    form(method="POST" enctype="multipart/form-data")
+      label(for="avatar") Avatar
+      input(name="avatar" id="avatar" type="file" accept="image/*")
+      label(for="email") Email
+      input(name="email" id="email" type="email" required value=loggedInUser.email placeholder="Email")
+      label(for="username") Username
+      input(name="username" id="username" type="text" required value=loggedInUser.username placeholder="Username")
+      label(for="name") Name
+      input(name="name" id="name" type="text" required value=loggedInUser.name placeholder="Name")
+      label(for="location") Location
+      input(name="location" id="location" type="text" required value=loggedInUser.location placeholder="Location")
+      button Update Profile
     if !loggedInUser.socialOnly
       hr
       a(href="change-password") Change password

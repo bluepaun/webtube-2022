@@ -1,10 +1,13 @@
 extends ../layouts/base.pug
 
 block content
-  h2 update video
-  form(method="POST")
-    input(name="title" type="text" value=video.title required)
-    input(name="description" placeholder="Description" required type="text" minlength="10" value=video.description)
-    input(name="hashtags" placeholder="HashTags separated by comma." required type="text" value=video.hashtags.join())
-    input(type="submit" value="save")
+  div.editBox
+    form(method="POST")
+      label(for="title") Title
+      input(id="title" name="title" type="text" value=video.title required)
+      label(for="description") Description
+      input(id="description" name="description" placeholder="Description" required type="text" minlength="10" value=video.description)
+      label(for="hashtags") HashTags
+      input(id="hashtags" name="hashtags" placeholder="HashTags separated by comma." required type="text" value=video.hashtags.join())
+      button Update Video
   

@@ -1,0 +1,20 @@
+.search-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 2em;
+
+  input {
+    padding: 0.5em 1em;
+    border-radius: 9999px;
+    width: 60%;
+  }
+
+  button {
+    border-radius: 9999px;
+    color: white;
+    background-color: $red;
+    padding: 0.3em 0.5em;
+  }
+}

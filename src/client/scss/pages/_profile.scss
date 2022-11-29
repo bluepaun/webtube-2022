@@ -1,6 +1,9 @@
+body:has(.profile) {
+  padding-top: 0 !important;
+}
 .profile {
   display: grid;
-  padding: 0.5em 1em;
+  padding: 1em 1em;
   grid-template-areas:
     "avatar name btn"
     "uname uname uname"
@@ -37,6 +40,7 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    word-break: break-all;
   }
   .profile__action {
     grid-area: btn;

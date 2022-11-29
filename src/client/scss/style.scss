@@ -12,9 +12,12 @@
 //Pages
 @import "./pages/_profile";
 @import "./pages/_watch";
+@import "./pages/_edit-profile.scss";
+@import "./pages/_search.scss";
 
 body {
   font-family: "Noto Sans", sans-serif;
   background-color: $light-purple;
+  padding-top: 1em;
   padding-bottom: 5em;
 }

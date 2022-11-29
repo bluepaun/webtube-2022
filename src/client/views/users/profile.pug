@@ -23,7 +23,7 @@ block content
     span.profile__username Username: #{user.username}
     span.profile__location Location: #{user.location}
     if loggedIn && String(loggedInUser._id) === String(user._id)
-      a.profile__edit(href="users/edit") Edit profile
+      a.profile__edit(href="edit") Edit profile
   ul.video-grid
     each v in user.videos
       +video(v)

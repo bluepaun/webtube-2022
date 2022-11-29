@@ -1,12 +1,17 @@
 extends layouts/base.pug
 include mixins/video.pug
 
-block content
-  form
-    input(placeholder="search by title" type="text" name="s")
-    input(type="submit" value="search")
+block scripts
+  script(defer src="/js/views/masonry.js")
 
-  each video in videos
-    +video(video)
-  else
-    span no vidoes
+block content
+  form.search-form
+    input(placeholder="search by title" type="text" name="s")
+    button
+      i(class="bx bx-search")
+
+  div.video-grid
+    each video in videos
+      +video(video)
+    else
+      span no vidoes

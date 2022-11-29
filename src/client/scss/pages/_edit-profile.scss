@@ -1,0 +1,46 @@
+.editBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .edit__avatar {
+    height: 10em;
+    width: 10em;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    img {
+      width: 100%;
+    }
+    i {
+      font-size: 10em;
+    }
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3em;
+    width: 80%;
+
+    input {
+      border: 1px solid $red;
+      padding: 0.3em 1em;
+      border-radius: 99999px;
+    }
+
+    button {
+      color: white;
+      background-color: $red;
+      padding: 0.3em;
+      border-radius: 99999px;
+      text-align: center;
+    }
+  }
+
+  a {
+    color: $red;
+  }
+}

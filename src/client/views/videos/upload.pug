@@ -1,15 +1,16 @@
 extends ../layouts/base.pug
 
 block content
-  h2 upload video
-  if errorMessage
-    span=errorMessage
-  form(method="POST" enctype="multipart/form-data")
-    label(for="video") Video
-    input(name="video" id="video" type="file" accept="video/*" required)
-    label(for="thumb") Thumbnail
-    input(name="thumb" id="thumb" type="file" accept="image/jpg" required)
-    input(name="title" placeholder="Title" required type="text" maxlength="80")
-    input(name="description" placeholder="Description" required type="text" minlength="10")
-    input(name="hashtags" placeholder="HashTags separated by comma." required type="text")
-    input(type="submit" value="upload video")
+  div.editBox
+    form(method="POST" enctype="multipart/form-data")
+      label(for="video") Video
+      input(name="video" id="video" type="file" accept="video/*" required)
+      label(for="thumb") Thumbnail
+      input(name="thumb" id="thumb" type="file" accept="image/jpg" required)
+      label(for="title") Title
+      input(id="title" name="title" placeholder="Title" required type="text" maxlength="80")
+      label(for="description") Description
+      input(id="description" name="description" placeholder="Description" required type="text" minlength="10")
+      label(for="hashtags") HashTags
+      input(id="hashtags" name="hashtags" placeholder="HashTags separated by comma." required type="text")
+      button Upload video
