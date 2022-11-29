@@ -8,7 +8,7 @@ import csso from "gulp-csso";
 import browserify from "browserify";
 import source from "vinyl-source-stream";
 import buffer from "vinyl-buffer";
-import GulpImage from "gulp-image";
+/* import GulpImage from "gulp-image"; */
 import cp from "child_process";
 import minify from "gulp-minify";
 import through from "through2";
@@ -122,7 +122,10 @@ const buildDeployJs = () => {
 };
 
 const buildImg = () =>
-  gulp.src(routes.img.src).pipe(GulpImage()).pipe(gulp.dest(routes.img.dest));
+  gulp
+    .src(routes.img.src)
+    /* .pipe(GulpImage()) */
+    .pipe(gulp.dest(routes.img.dest));
 
 let sv = null;
 const runServer = (cb) => {
