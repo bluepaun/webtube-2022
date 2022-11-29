@@ -4,7 +4,7 @@
   "repository": "https://github.com/bluepaun/webtube-2022.git",
   "author": "bluepaun <bluepaun@gmail.com>",
   "license": "MIT",
-  "main": "src/client/js/main.js",
+  "main": "src/server/init.js",
   "type": "module",
   "engines": {
     "npm": ">=8.0.0 <9.0.0",
