@@ -17,6 +17,20 @@
     "build:asset": "gulp build",
     "build": "gulp deploy"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@ffmpeg/core": "^0.11.0",
+    "@ffmpeg/ffmpeg": "^0.11.6",
+    "bcrypt": "^5.1.0",
+    "connect-mongo": "^4.6.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-flash": "^0.0.2",
+    "express-session": "^1.17.3",
+    "mongoose": "^6.7.1",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "node-fetch": "^3.3.0",
+    "pug": "^3.0.2"
+  },
   "devDependencies": {}
 }
