@@ -1,3 +1,18 @@
+function setImageRatio(item, cb) {
+  const thumbnail = item.querySelector(".video__thumbnail");
+  const imageSrc = thumbnail.style.backgroundImage.replace(
+    /url\((['"])?(.*?)\1\)/gi,
+    "$2"
+  );
+  const image = new Image();
+  image.src = imageSrc;
+  image.onload = () => {
+    const { width, height } = image;
+    const ratio = (height / width) * 100;
+    thumbnail.style.paddingTop = `${ratio}%`;
+    cb(item);
+  };
+}
 function resizeGriditem(item) {
   const grid = document.querySelector(".video-grid");
   const rowHeight = parseInt(
@@ -16,7 +31,7 @@ function resizeGriditem(item) {
 function resizeAllGriditem() {
   const items = document.querySelectorAll(".video");
   items.forEach((item) => {
-    resizeGriditem(item);
+    setImageRatio(item, resizeGriditem);
   });
 }
 

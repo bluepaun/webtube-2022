@@ -86,8 +86,9 @@ const clean = async () => await deleteSync(["build"]);
 const buildPug = () =>
   gulp.src(routes.pug.src).pipe(gpug()).pipe(gulp.dest(routes.pug.dest));
 
-const buildScss = () =>
-  gulp
+const buildScss = () => {
+  console.log("scss");
+  return gulp
     .src(routes.scss.src)
     .pipe(scss().on("error", scss.logError))
     .pipe(
@@ -98,6 +99,7 @@ const buildScss = () =>
     )
     .pipe(csso())
     .pipe(gulp.dest(routes.scss.dest));
+};
 
 const buildJs = () => {
   return (

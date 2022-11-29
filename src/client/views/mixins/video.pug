@@ -1,6 +1,17 @@
 mixin video(info)
   div.video
     div.content
-      div.video__thumbnail(style=`background-image:url(${info.thumbUrl})`)
-      h4
-        a(href=`/videos/${info.id}`)=info.title
+      a.video__content(href=`/videos/${info.id}`)
+        div.video__thumbnail(style=`background-image:url(${info.thumbUrl})`)
+        h4=info.title
+      a.video__owner(href=`/users/${info.owner._id}`)
+        div.video__owner-avatar
+          if info.owner.avatarUrl
+            img(src=`${info.owner.avatarUrl.includes("http") ? "" : "/"}${info.owner.avatarUrl}`)
+          else
+            i(class="bx bx-user")
+        h5=info.owner.name
+      div.video__views
+        i(class="bx bx-play-circle")
+        span #{info.meta.views}
+

@@ -6,7 +6,10 @@ const VIDEO_VIEW_PREFIX = "videos/";
 
 export const home = async (req, res) => {
   try {
-    const videos = await videoModel.find({}).sort({ createdAt: "desc" });
+    const videos = await videoModel
+      .find({})
+      .populate("owner")
+      .sort({ createdAt: "desc" });
     return res.render("home", { pageTitle: "home", videos });
   } catch (err) {
     req.flash("error", "Cannot find videos");
