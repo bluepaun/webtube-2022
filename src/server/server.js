@@ -7,6 +7,7 @@ import videoRouter from "./routers/videoRouter.js";
 import { localsMiddleware } from "./middlewares.js";
 import MongoStore from "connect-mongo";
 import apiRouter from "./routers/apiRouter.js";
+import flash from "express-flash";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(morgan("dev"));
 
 //body parser
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.use(
   session({
@@ -26,6 +28,8 @@ app.use(
     saveUninitialized: false,
   })
 );
+
+app.use(flash());
 
 app.use(localsMiddleware);
 

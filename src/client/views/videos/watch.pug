@@ -2,6 +2,8 @@ extends ../layouts/base.pug
 
 block scripts
   script(defer src="/js/views/videoPlay.js")
+  if loggedIn
+    script(defer src="/js/commentSection.js")
 
 block content
   div.watch-content
@@ -34,4 +36,16 @@ block content
         a(href=`${video.id}/edit`) Edit video &rarr;
       div
         a(href=`${video.id}/delete`) Delete video &rarr;
+    if loggedIn
+      div.video__add-comments
+        form.video__comment-form#commentForm
+          textarea(cols="30" rows="10" placeholder="write comment")
+          button Add Comment
+    div.video__comments
+      ul
+        each comment in video.comments.reverse()
+          li.video__comment
+            span #{comment.text}
+            if loggedIn && String(loggedInUser._id) === String(comment.owner._id)
+              button(data-commentid=`${comment._id}`) x
   

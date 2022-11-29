@@ -12,6 +12,7 @@ export const see = async (req, res) => {
   const user = await User.findById(id).populate("videos");
 
   if (!user) {
+    req.flash("error", "Cannot find user");
     return res.status(404).render("404", { pageTitle: "404" });
   }
 
@@ -20,16 +21,18 @@ export const see = async (req, res) => {
     user,
   });
 };
+
 export const getJoin = (req, res) =>
   res.render(USERS_VIEW_PREFIX + "join", { pageTitle: "join" });
+
 export const postJoin = async (req, res) => {
   const {
     body: { email, username, password, passwordConfirm, name, location },
   } = req;
   if (password !== passwordConfirm) {
+    req.flash("error", "password confirmation does not match");
     return res.status(400).render(USERS_VIEW_PREFIX + "join", {
       pageTitle: "join",
-      errorMessage: "password confirmation does not match",
     });
   }
 
@@ -37,9 +40,9 @@ export const postJoin = async (req, res) => {
     $or: [{ username }, { email }],
   });
   if (isExists) {
+    req.flash("error", "This username/email is already taken");
     return res.status(400).render(USERS_VIEW_PREFIX + "join", {
       pageTitle: "join",
-      errorMessage: "This username/email is already taken",
     });
   }
 
@@ -52,6 +55,7 @@ export const postJoin = async (req, res) => {
       location,
     });
   } catch (error) {
+    req.flash("error", "Cannot create user");
     return res.status(400).render(USERS_VIEW_PREFIX + "join", {
       pageTitle: "join",
       errorMessage: err._message,
@@ -82,9 +86,9 @@ export const postEdit = async (req, res) => {
   if (email !== orignalEmail) {
     const exists = await User.exists({ email });
     if (exists) {
+      req.flash("error", "Email already exists");
       return res.status(400).render(USERS_VIEW_PREFIX + "edit-profile", {
         pageTitle: "Edit Profile",
-        errorMessage: "Email already exists",
       });
     }
   }
@@ -92,9 +96,9 @@ export const postEdit = async (req, res) => {
   if (username !== orignalUsername) {
     const exists = await User.exists({ username });
     if (exists) {
+      req.flash("error", "Username already exists");
       return res.status(400).render(USERS_VIEW_PREFIX + "edit-profile", {
         pageTitle: "Edit Profile",
-        errorMessage: "Username already exists",
       });
     }
   }
@@ -111,19 +115,11 @@ export const postEdit = async (req, res) => {
       },
       { new: true }
     );
-    /* req.session.user = { */
-    /*   ...req.session.user, */
-    /*   email, */
-    /*   username, */
-    /*   name, */
-    /*   location, */
-    /* }; */
     req.session.user = updatedUser;
   } catch (error) {
-    cosole.log(error);
+    req.flash("error", "Cannot update user");
     return res.status(400).render(USERS_VIEW_PREFIX + "edit-profile", {
       pageTitle: "Edit Profile",
-      errorMessage: error,
     });
   }
 
@@ -141,17 +137,17 @@ export const postLogin = async (req, res) => {
   } = req;
   const user = await User.findOne({ username });
   if (!user || user.socialOnly) {
+    req.flash("error", "An account with this username does not exist");
     return res.status(400).render(USERS_VIEW_PREFIX + "login", {
       pageTitle: "Login",
-      errorMessage: "An account with this username does not exist",
     });
   }
 
   const match = await bcrypt.compare(password, user.password);
   if (!match) {
+    req.flash("error", "Wrong password");
     return res.status(400).render(USERS_VIEW_PREFIX + "login", {
       pageTitle: "Login",
-      errorMessage: "Wrong password",
     });
   }
   req.session.loggedIn = true;
@@ -161,6 +157,7 @@ export const postLogin = async (req, res) => {
 };
 
 export const logout = (req, res) => {
+  req.flash("info", "bye bye");
   req.session.destroy();
   return res.redirect("/");
 };
@@ -224,6 +221,7 @@ export const finishGithubLogin = async (req, res) => {
     ).json();
     const emailObj = emailData.find((email) => email.primary && email.verified);
     if (!emailObj) {
+      req.flash("error", "Cannot find email");
       return res.redirect("/login");
     }
     let user = await User.findOne({ email: emailObj.email });
@@ -241,12 +239,14 @@ export const finishGithubLogin = async (req, res) => {
     req.session.user = user;
     return res.redirect("/");
   } else {
+    req.flash("error", "Cannot access github login");
     return res.redirect("/login");
   }
 };
 
 export const getChangePassword = (req, res) => {
   if (req.session.user.socialOnly) {
+    req.flash("error", "Cannot change password of social account");
     return res.redirect("/");
   }
   return res.render(USERS_VIEW_PREFIX + "change-password", {
@@ -263,29 +263,25 @@ export const postChangePassword = async (req, res) => {
   const match = await bcrypt.compare(confirmPassword, user.password);
 
   if (!match) {
+    req.flash("error", "Password is wrong, Can not change password");
     return res.status(400).render(USERS_VIEW_PREFIX + "change-password", {
       pageTitle: "Change password",
-      errorMessage: "Password is wrong, Can not change password",
     });
   }
 
   if (password !== passwordConfirm) {
+    req.flash("error", "password confirmation does not match");
     return res.status(400).render(USERS_VIEW_PREFIX + "change-password", {
       pageTitle: "change-password",
-      errorMessage: "password confirmation does not match",
     });
   }
 
-  /* const updatedUser = await User.findByIdAndUpdate( */
-  /*   user._id, */
-  /*   { password }, */
-  /*   { new: true } */
-  /* ); */
   const updatedUser = await User.findById(user._id);
   updatedUser.password = password;
   await updatedUser.save();
 
   req.session.user.password = updatedUser.password;
 
+  req.flash("info", "password changing sucess");
   return res.redirect("/users/logout");
 };

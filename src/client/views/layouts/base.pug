@@ -1,3 +1,5 @@
+include ../mixins/message.pug
+
 doctype html
 html(lang="en")
   head
@@ -9,6 +11,12 @@ html(lang="en")
     script(defer src="/js/main.js")
     block scripts
   body
+    if messages.error
+      +message("error", messages.error)
+    if messages.info
+      +message("info", messages.info)
+    if messages.success
+      +message("success", messages.success)
     main
       block content
     include ../partials/footer.pug

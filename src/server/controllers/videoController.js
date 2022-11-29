@@ -1,5 +1,6 @@
 import videoModel from "../models/videoModel.js";
 import User from "../models/User.js";
+import Comment from "../models/Comment.js";
 
 const VIDEO_VIEW_PREFIX = "videos/";
 
@@ -8,7 +9,7 @@ export const home = async (req, res) => {
     const videos = await videoModel.find({}).sort({ createdAt: "desc" });
     return res.render("home", { pageTitle: "home", videos });
   } catch (err) {
-    console.log(err);
+    req.flash("error", "Cannot find videos");
     return res.send("error", err);
   }
 };
@@ -17,8 +18,13 @@ export const watch = async (req, res) => {
   const {
     params: { id },
   } = req;
-  const video = await videoModel.findById(id).populate("owner");
+  const video = await videoModel
+    .findById(id)
+    .populate("owner")
+    .populate("comments");
+
   if (!video) {
+    req.flash("error", "Cannot find video");
     return res.status(404).render("404", { pagetTitle: "not find" });
   }
 
@@ -34,10 +40,12 @@ export const getEdit = async (req, res) => {
   } = req;
   const video = await videoModel.findById(id);
   if (!video) {
+    req.flash("error", "Cannot find video");
     return res.status(404).render("404", { pagetTitle: "not find" });
   }
 
   if (!req.session.user || String(video.owner) !== req.session.user._id) {
+    req.flash("error", "Not authorized");
     return res.status(403).redirect("/");
   }
 
@@ -49,15 +57,16 @@ export const getEdit = async (req, res) => {
 export const postEdit = async (req, res) => {
   const {
     params: { id },
-    body,
   } = req;
 
   const video = await videoModel.findById(id);
   if (!video) {
+    req.flash("error", "Cannot find video");
     return res.status(404).render("404", { pagetTitle: "not find" });
   }
 
   if (!req.session.user || String(video.owner) !== req.session.user._id) {
+    req.flash("error", "Not authorized");
     return res.status(403).redirect("/");
   }
 
@@ -100,10 +109,12 @@ export const deleteVideo = async (req, res) => {
   const video = await videoModel.findById(id);
 
   if (!video) {
+    req.flash("error", "Cannot find video");
     return res.status(404).render("404", { pageTitle: "404" });
   }
 
   if (!req.session.user || String(video.owner) !== req.session.user._id) {
+    req.flash("error", "Not authorized");
     return res.status(403).redirect("/");
   }
 
@@ -122,17 +133,22 @@ export const getUpload = (req, res) =>
 export const postUpload = async (req, res) => {
   const {
     body: { title, description, hashtags },
-    file: { path: fileUrl },
+    files: { video, thumb },
     session: {
       user: { _id },
     },
   } = req;
+
+  const fileUrl = video[0].path;
+  const thumbUrl = thumb[0].path;
+
   try {
     const newVideo = await videoModel.create({
       title,
       description,
       hashtags: videoModel.formatHashtags(hashtags),
       fileUrl,
+      thumbUrl,
       owner: _id,
     });
 
@@ -140,9 +156,9 @@ export const postUpload = async (req, res) => {
     user.videos.push(newVideo._id);
     user.save();
   } catch (err) {
+    req.flash("error", "Cannot create video");
     return res.status(400).render(VIDEO_VIEW_PREFIX + "upload", {
       pageTitle: "upload",
-      errorMessage: err._message,
     });
   }
   return res.redirect("/");
@@ -155,6 +171,7 @@ export const registerView = async (req, res) => {
   console.log(id);
   const video = await videoModel.findById(id);
   if (!video) {
+    req.flash("error", "Cannot find Video");
     return res.sendStatus(404);
   }
 
@@ -175,4 +192,79 @@ export const postDownload = (req, res) => {
     pageTitle: "Download",
     fileUrl: url,
   });
+};
+
+export const createComment = async (req, res) => {
+  const {
+    params: { id: videoId },
+    body: { text },
+    session: {
+      user: { _id: userId },
+    },
+  } = req;
+
+  const video = await videoModel.findById(videoId);
+  if (!video) {
+    return res.sendStatus(404);
+  }
+
+  const commentUser = await User.findById(userId);
+  if (!commentUser) {
+    return res.sendStatus(404);
+  }
+
+  const comment = await Comment.create({
+    text,
+    owner: commentUser._id,
+    video: video._id,
+  });
+
+  video.comments.push(comment._id);
+  commentUser.comments.push(comment._id);
+  video.save();
+  commentUser.save();
+
+  req.session.user = commentUser;
+
+  return res.status(201).json({ newCommentId: comment._id });
+};
+
+export const deleteComment = async (req, res) => {
+  const {
+    body: { commentid },
+    session: {
+      user: { _id: commentUserId },
+    },
+    params: { id: videoId },
+  } = req;
+
+  const video = await videoModel.findById(videoId);
+  if (!video) {
+    return res.sendStatus(404);
+  }
+
+  const commentUser = await User.findById(commentUserId);
+  if (!commentUser) {
+    return res.sendStatus(404);
+  }
+
+  const comment = await Comment.findById(commentid);
+  if (!comment) {
+    return res.sendStatus(404);
+  }
+
+  if (
+    String(comment.owner) !== String(commentUser._id) ||
+    String(comment.video) !== String(video._id)
+  ) {
+    return res.sendStatus(401);
+  }
+
+  await Comment.findByIdAndDelete(commentid);
+  commentUser.comments.splice(commentUser.comments.indexOf(commentid), 1);
+  commentUser.save();
+  video.comments.splice(video.comments.indexOf(commentid), 1);
+  video.save();
+
+  return res.sendStatus(202);
 };
