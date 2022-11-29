@@ -6,12 +6,11 @@
   "license": "MIT",
   "main": "src/client/js/main.js",
   "type": "module",
-  "sourceType": "module",
   "scripts": {
-    "build:server": "babel src/server -d serverbuild",
+    "start": "node src/server/init.js",
     "dev": "gulp dev",
-    "build": "gulp build",
-    "deploy": "gulp deploy"
+    "build:asset": "gulp build",
+    "build": "gulp deploy"
   },
   "dependencies": {
     "@ffmpeg/core": "^0.11.0",
@@ -33,6 +32,7 @@
     "@babel/core": "^7.19.6",
     "@babel/node": "^7.20.0",
     "@babel/plugin-syntax-import-meta": "^7.10.4",
+    "@babel/plugin-transform-modules-commonjs": "^7.19.6",
     "@babel/preset-env": "^7.19.4",
     "@babel/preset-es2015": "^7.0.0-beta.53",
     "@babel/register": "^7.18.9",
@@ -51,6 +51,7 @@
     "gulp-minify": "^3.1.0",
     "gulp-pug": "^5.0.0",
     "gulp-sass": "^5.1.0",
+    "gulp-uglify": "^3.0.2",
     "sass": "^1.55.0",
     "through2": "^4.0.2",
     "vinyl-buffer": "^1.0.1",

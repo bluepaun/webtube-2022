@@ -14,6 +14,7 @@ import minify from "gulp-minify";
 import through from "through2";
 import bro2 from "gulp-bro";
 import babelify2 from "babelify";
+import uglify from "gulp-uglify";
 
 const scss = gsass(sass);
 
@@ -99,12 +100,21 @@ const buildScss = () =>
     .pipe(gulp.dest(routes.scss.dest));
 
 const buildJs = () => {
-  console.log("js");
   return (
     gulp
       .src(routes.js.src)
       /* .pipe(bro()) */
       .pipe(bro2())
+      .pipe(gulp.dest(routes.js.dest))
+  );
+};
+const buildDeployJs = () => {
+  return (
+    gulp
+      .src(routes.js.src)
+      /* .pipe(bro()) */
+      .pipe(bro2())
+      .pipe(uglify())
       .pipe(gulp.dest(routes.js.dest))
   );
 };
@@ -117,7 +127,7 @@ const runServer = (cb) => {
   if (sv) {
     sv.kill("SIGINT");
   }
-  sv = cp.spawn(`babel-node`, [`./${routes.server.src}`], { stdio: "inherit" });
+  sv = cp.spawn(`node`, [`./${routes.server.src}`], { stdio: "inherit" });
   cb();
 };
 
@@ -144,7 +154,18 @@ export const build = gulp.series([
     /* buildImg */
   ),
 ]);
+export const deployBuild = gulp.series([
+  prepare,
+  gulp.parallel(
+    moveStatic,
+    /* buildPug,  */
+    buildScss,
+    buildDeployJs
+    /* buildImg */
+  ),
+]);
+
 const post = gulp.series([runServer, watch]);
 
 export const dev = gulp.series([build, post]);
-export const deploy = gulp.series([prepare, build, cleanPublish]);
+export const deploy = gulp.series([prepare, deployBuild]);
