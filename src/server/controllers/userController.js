@@ -9,7 +9,14 @@ export const see = async (req, res) => {
     params: { id },
   } = req;
 
-  const user = await User.findById(id).populate("videos");
+  const user = await User.findById(id).populate({
+    path: "videos",
+    populate: { path: "owner", sort: { createdAt: "desc" } },
+  });
+
+  user.videos.sort((a, b) => {
+    return b.createdAt - a.createdAt;
+  });
 
   if (!user) {
     req.flash("error", "Cannot find user");

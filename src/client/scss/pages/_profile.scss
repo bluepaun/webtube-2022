@@ -59,5 +59,10 @@
 
   .profile__edit {
     grid-area: edit;
+    color: white;
+    background-color: $red;
+    padding: 0.3em;
+    border-radius: 99999px;
+    text-align: center;
   }
 }
