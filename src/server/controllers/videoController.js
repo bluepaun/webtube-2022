@@ -142,8 +142,8 @@ export const postUpload = async (req, res) => {
     },
   } = req;
 
-  const fileUrl = video[0].path;
-  const thumbUrl = thumb[0].path;
+  const fileUrl = video[0].path || video[0].location;
+  const thumbUrl = thumb[0].path || thumb[0].location;
 
   try {
     const newVideo = await videoModel.create({

@@ -89,6 +89,10 @@ export const postEdit = async (req, res) => {
     },
     file,
   } = req;
+  let newAvatarUrl;
+  if (file) {
+    newAvatarUrl = file.path || file.location;
+  }
 
   if (email !== orignalEmail) {
     const exists = await User.exists({ email });
@@ -114,7 +118,7 @@ export const postEdit = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       id,
       {
-        avatarUrl: file ? file.path : avatarUrl,
+        avatarUrl: newAvatarUrl || avatarUrl,
         email,
         username,
         name,

@@ -1,4 +1,29 @@
 import multer from "multer";
+import multerS3 from "multer-s3";
+import aws from "aws-sdk";
+import { S3Client } from "@aws-sdk/client-s3";
+
+/* const s3 = new aws.S3({ */
+/*   credentials: { */
+/*     accessKeyId: process.env.AWS_ID, */
+/*     secretAccessKey: process.env.AWS_SECRET, */
+/*   }, */
+/* }); */
+
+const s3 = new S3Client({
+  region: "ap-northeast-2",
+  credentials: {
+    accessKeyId: process.env.AWS_ID,
+    secretAccessKey: process.env.AWS_SECRET,
+  },
+});
+
+const multerS3Uploader = multerS3({
+  s3,
+  acl: "public-read",
+  bucket: "wetube-blue",
+});
+
 export const localsMiddleware = (req, res, next) => {
   res.locals.siteName = "Wetube";
   res.locals.loggedIn = Boolean(req.session.loggedIn);
@@ -29,6 +54,7 @@ export const avatarUpload = multer({
   limits: {
     fileSize: 3000000,
   },
+  storage: multerS3Uploader,
 });
 
 export const videoUpload = multer({
@@ -36,6 +62,7 @@ export const videoUpload = multer({
   limits: {
     fileSize: 50000000,
   },
+  storage: multerS3Uploader,
 });
 
 export const cropPolicy = (req, res, next) => {

@@ -2,7 +2,7 @@ mixin video(info)
   div.video
     div.content.card-1
       a.video__content(href=`/videos/${info.id}`)
-        div.video__thumbnail(style=`background-image:url(/${info.thumbUrl})`)
+        div.video__thumbnail(style=`background-image:url(${info.thumbUrl.includes("http")?"":"/"}${info.thumbUrl})`)
         h4=info.title
       a.video__owner(href=`/users/${info.owner._id}`)
         div.video__owner-avatar
