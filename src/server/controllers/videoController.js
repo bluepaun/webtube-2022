@@ -1,6 +1,9 @@
 import videoModel from "../models/videoModel.js";
 import User from "../models/User.js";
 import Comment from "../models/Comment.js";
+import fs from "fs";
+import { isDeploy } from "../utils.js";
+import { s3 } from "../middlewares.js";
 
 const VIDEO_VIEW_PREFIX = "videos/";
 
@@ -119,6 +122,25 @@ export const deleteVideo = async (req, res) => {
   if (!req.session.user || String(video.owner) !== req.session.user._id) {
     req.flash("error", "Not authorized");
     return res.status(403).redirect("/");
+  }
+
+  const { fileUrl, thumbUrl } = video;
+  if (isDeploy) {
+    const deleteFile = (url) => {
+      const fileName = url.replace(/^.*\/videos\/(.*)$/gi, "$1");
+      const param = {
+        Bucket: "wetube-blue",
+        Key: `videos/${fileName}`,
+      };
+      s3.deleteObject(param, (err, data) => {
+        if (err) console.log(err, err.stack); // an error occurred
+      });
+    };
+    deleteFile(fileUrl);
+    deleteFile(thumbUrl);
+  } else {
+    fs.unlink(`./${fileUrl}`, (err) => console.log(err));
+    fs.unlink(`./${thumbUrl}`, (err) => console.log(err));
   }
 
   const user = await User.findById(req.session.user._id);

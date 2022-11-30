@@ -1,6 +1,9 @@
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import fetch from "node-fetch";
+import { isDeploy } from "../utils.js";
+import fs from "fs";
+import { s3 } from "../middlewares.js";
 
 const USERS_VIEW_PREFIX = "users/";
 
@@ -134,9 +137,24 @@ export const postEdit = async (req, res) => {
     });
   }
 
+  if (isDeploy) {
+    if (!avatarUrl.includes("avatars.githubusercontent.com")) {
+      const fileName = avatarUrl.replace(/^.*\/images\/(.*)$/gi, "$1");
+      const param = {
+        Bucket: "wetube-blue",
+        Key: `images/${fileName}`,
+      };
+      s3.deleteObject(param, (err, data) => {
+        if (err) console.log(err, err.stack); // an error occurred
+      });
+    }
+  } else {
+    if (newAvatarUrl && !avatarUrl.includes("http"))
+      fs.unlink(`./${avatarUrl}`, (err) => console.log(err));
+  }
+
   return res.redirect("/");
 };
-export const remove = (req, res) => res.send("remove user");
 
 export const getLogin = (req, res) => {
   return res.render(USERS_VIEW_PREFIX + "login", { pageTitle: "Login" });

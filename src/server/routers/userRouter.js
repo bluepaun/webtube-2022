@@ -4,7 +4,6 @@ import {
   logout,
   getEdit,
   postEdit,
-  remove,
   startGithubLogin,
   finishGithubLogin,
   getChangePassword,
@@ -29,7 +28,6 @@ userRouter
   .all(protectorMiddleware)
   .get(getChangePassword)
   .post(postChangePassword);
-userRouter.get("/remove", remove);
 userRouter.get("/github/start", publicOnlyMiddleware, startGithubLogin);
 userRouter.get("/github/finish", publicOnlyMiddleware, finishGithubLogin);
 userRouter.get("/:id([0-9a-f]{24})", see);
