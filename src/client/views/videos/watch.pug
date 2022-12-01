@@ -10,42 +10,60 @@ block content
     div#videoContainer
       video(src=`${video.fileUrl.includes("http")?"":"/"}${video.fileUrl}` data-videoid=video._id playsinline)
       div#videoControls
-        button#play Play
-        button#mute Mute
-        input#volume(type="range" step="any" min="0" max="1" value="0.5")
-
-        div
+        button#play
+          i(class="bx bx-play")
+        button.volumeIcon
+          i(class="bx bxs-volume-low")
+        div.volumeBox
+          button#mute.volumeIcon
+            i(class="bx bxs-volume-low")
+          input#volume.range(type="range" step="any" min="0" max="1" value="0.5")
+        div.timeLineBox
           span#currentTime 0:00
-          span  / 
           span#totalTime 0:00
-        div 
-          input#timeline(type="range" step="any" min="0" value="0")
-        div
-          button#fullScreen Full Screen
-    h2=video.title
-    p=video.description
-    small=video.createdAt
-    br
-    small Uploaded by 
-      a(href=`/users/${video.owner._id}`)=video.owner.username
-    ul
-      each h in video.hashtags
-        li=h
-    if loggedIn && String(loggedInUser._id) === String(video.owner._id)
-      div
-        a(href=`${video.id}/edit`) Edit video &rarr;
-      div
-        a(href=`${video.id}/delete`) Delete video &rarr;
-    if loggedIn
-      div.video__add-comments
+          input#timeline.range(type="range" step="any" min="0" max="1" value="0")
+        button#fullScreen
+          i(class="bx bx-fullscreen")
+    div.titleBox
+      ul
+        each h in video.hashtags
+          li=h
+      h2=video.title
+      a.video__owner(href=`/users/${video.owner._id}`)
+        div.video__owner-avatar
+          if video.owner.avatarUrl
+            img(src=`${video.owner.avatarUrl.includes("http") ? "" : "/"}${video.owner.avatarUrl}`)
+          else
+            i(class="bx bx-user")
+        h5=video.owner.name
+        
+      p=video.description
+      small=video.createdAt
+      br
+      if loggedIn && String(loggedInUser._id) === String(video.owner._id)
+        div.ownerBox
+          a(href=`${video.id}/edit`) Edit video &rarr;
+          a(href=`${video.id}/delete`) Delete video &rarr;
+
+    div.commentBox
+      if loggedIn
         form.video__comment-form#commentForm
           textarea(cols="30" rows="10" placeholder="write comment")
-          button Add Comment
-    div.video__comments
-      ul
-        each comment in video.comments.reverse()
-          li.video__comment
-            span #{comment.text}
-            if loggedIn && String(loggedInUser._id) === String(comment.owner._id)
-              button(data-commentid=`${comment._id}`) x
+          button
+            i(class="bx bxs-message-alt-add")
+      div.video__comments
+        ul
+          each comment in video.comments.reverse()
+            li.video__comment
+              a.video__owner(href=`/users/${comment.owner._id}`)
+                div.video__owner-avatar
+                  if comment.owner.avatarUrl
+                    img(src=`${comment.owner.avatarUrl.includes("http") ? "" : "/"}${video.owner.avatarUrl}`)
+                  else
+                    i(class="bx bx-user")
+                h5=comment.owner.name
+              span #{comment.text}
+              if loggedIn && String(loggedInUser._id) === String(comment.owner._id)
+                button(data-commentid=`${comment._id}`) 
+                  i(class="bx bx-message-alt-x")
   

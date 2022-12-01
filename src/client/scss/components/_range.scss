@@ -1,0 +1,16 @@
+.range {
+  height: 4px;
+  appearance: none;
+  border-radius: 10px;
+  overflow: hidden;
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: white;
+    border: 1px solid $red;
+    box-shadow: -404px 0 0 400px $red;
+    cursor: pointer;
+  }
+}

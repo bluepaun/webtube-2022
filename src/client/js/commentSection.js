@@ -10,6 +10,7 @@ const commentsLis = commentsUl.querySelectorAll(".video__comment");
 commentsLis.forEach((li) => {
   const btn = li.querySelector("button");
   if (!btn) return;
+  console.dir(btn);
   btn.addEventListener("click", handleDeleteComment);
 });
 
@@ -19,6 +20,8 @@ async function handleDeleteComment(e) {
       dataset: { commentid },
     },
   } = e;
+
+  console.dir(e.target);
   const { status } = await fetch(`/api/videos/${videoid}/comment`, {
     method: "DELETE",
     headers: {
@@ -33,19 +36,26 @@ async function handleDeleteComment(e) {
   parentLi.remove();
 }
 
-function addComment(text, newCommentId) {
+function addComment(comment, owner) {
   const li = document.createElement("li");
   li.classList.add("video__comment");
-  const span = document.createElement("span");
-  span.innerText = text;
-  const button = document.createElement("button");
-  button.innerText = "x";
-  button.dataset.commentid = newCommentId;
-  button.addEventListener("click", handleDeleteComment);
 
-  li.appendChild(span);
-  li.appendChild(button);
+  let img;
+  if (owner.avatarUrl) {
+    const imgurl =
+      (owner.avatarUrl.includes("http") ? "" : "/") + owner.avatarUrl;
+    img = `<img src="${imgurl}">`;
+  } else {
+    img = `<i class="bx bx-user"></i>`;
+  }
+
+  li.innerHTML = `<li class="video__comment"><a class="video__owner" href="/users/${owner._id}"><div class="video__owner-avatar">
+${img}</div><h5>${owner.name}</h5></a><span>${comment.text}
+</span><button data-commentid="${comment._id}"> <i class="bx bx-message-alt-x"></i></button></li>`;
+
   commentsUl.prepend(li);
+  const btn = li.querySelector("button");
+  btn.addEventListener("click", handleDeleteComment);
 }
 
 if (form) {
@@ -65,8 +75,8 @@ if (form) {
     });
 
     if (response.status === 201) {
-      const { newCommentId } = await response.json();
-      addComment(text, newCommentId);
+      const { comment, owner } = await response.json();
+      addComment(comment, owner);
       textarea.value = "";
     }
   });

@@ -27,7 +27,9 @@ export const watch = async (req, res) => {
   const video = await videoModel
     .findById(id)
     .populate("owner")
-    .populate("comments");
+    .populate({ path: "comments", populate: { path: "owner" } });
+
+  console.log(video);
 
   if (!video) {
     req.flash("error", "Cannot find video");
@@ -251,7 +253,7 @@ export const createComment = async (req, res) => {
 
   req.session.user = commentUser;
 
-  return res.status(201).json({ newCommentId: comment._id });
+  return res.status(201).json({ comment, owner: commentUser });
 };
 
 export const deleteComment = async (req, res) => {

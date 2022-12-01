@@ -1,32 +1,193 @@
 .watch-content {
   width: 100%;
-  video {
-    width: 100%;
-    max-height: 60vh;
-  }
-  h2 {
-    padding-top: 1rem;
-    font-size: 2em;
-  }
-  p {
-    padding-top: 1rem;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-  small {
-    opacity: 0.5;
-    font-size: 0.5rem;
-  }
-
-  ul {
-    display: flex;
-    gap: 0.2em;
-    padding-top: 1rem;
-    li {
-      background-color: rgba(0, 0, 0, 0.2);
+  #videoContainer {
+    position: relative;
+    width: fit-content;
+    video {
+      width: 100%;
+      &.fullscreen {
+        max-height: 100vh;
+      }
+    }
+    #videoControls {
+      position: absolute;
+      bottom: 10px;
+      left: 10%;
+      width: 80%;
+      display: grid;
+      grid-template-columns: min-content min-content 1fr min-content;
+      background-color: black;
+      padding: 0.3em 1em;
       color: white;
-      padding: 0.3em;
-      font-size: 0.8em;
-      border-radius: 1em;
+      border-radius: 9999px;
+      opacity: 0;
+      transition: opacity 0.3s;
+
+      &.showing {
+        opacity: 1;
+      }
+      #play {
+        i {
+          font-size: 1.5em;
+        }
+      }
+      i {
+        color: white;
+      }
+
+      button {
+        padding: 0;
+        width: 1.5rem;
+        height: 1.5rem;
+        background: transparent;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .volumeBox {
+        position: absolute;
+        top: -30px;
+        background-color: black;
+        border-radius: 9999px;
+        display: flex;
+        align-items: center;
+        padding: 0.1em 0.5em 0.1em 0.3em;
+        .range {
+          width: 10em;
+        }
+      }
+
+      .timeLineBox {
+        display: grid;
+        grid-template-columns: min-content 1fr min-content;
+        grid-template-areas:
+          "curT 1 totalT"
+          "line line line";
+        font-size: 0.6em;
+        #currentTime {
+          grid-area: curT;
+        }
+        #totalTime {
+          grid-area: totalT;
+        }
+        .range {
+          grid-area: line;
+        }
+      }
+    }
+  }
+
+  .titleBox {
+    width: 100%;
+    padding: 0.5em 1em;
+    h2 {
+      padding-top: 0.2em;
+      font-size: 1.5em;
+    }
+    p {
+      padding: 1em 1em;
+      font-size: 0.3em;
+      background-color: rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+      min-height: 50px;
+    }
+    small {
+      opacity: 0.5;
+      font-size: 0.5rem;
+    }
+    ul {
+      display: flex;
+      gap: 0.2em;
+      flex-wrap: wrap;
+      li {
+        background-color: rgba(0, 0, 0, 0.2);
+        color: white;
+        padding: 0.2rem;
+        font-size: 0.4em;
+        border-radius: 1em;
+      }
+    }
+  }
+
+  .ownerBox {
+    width: 100%;
+    padding: 0.3em 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+    a {
+      padding: 0.5em 1em;
+      background-color: $red;
+      color: white;
+      border-radius: 99999px;
+      font-size: 0.5em;
+    }
+  }
+
+  .commentBox {
+    padding: 0 1em;
+    width: 100%;
+    word-wrap: break-word;
+    .video__comment-form {
+      padding: 0.4rem 0;
+      height: 3.4rem;
+      display: grid;
+      grid-template-columns: 4fr 2.5rem;
+      font-size: 0.4em;
+      button {
+        border-radius: 99999px;
+        background-color: $red;
+        color: white;
+      }
+      textarea {
+        border-radius: 99999px;
+        padding: 0.2em 1em;
+      }
+      i {
+        font-size: 1.4em;
+      }
+    }
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3em;
+      padding-top: 1em;
+      .video__comment {
+        position: relative;
+
+        span {
+          padding: 0.7em 1.3em;
+          display: block;
+          border-radius: 99999px;
+          background-color: $red;
+          color: white;
+        }
+
+        span:has(~ button) {
+          background-color: $green;
+        }
+
+        button {
+          position: absolute;
+          top: 0.7em;
+          right: 0.8em;
+          width: 1em;
+          height: 1em;
+          background-color: transparent;
+          cursor: pointer;
+          i {
+            font-size: 1.3em;
+            pointer-events: none;
+          }
+        }
+      }
     }
   }
 }

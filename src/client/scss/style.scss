@@ -2,9 +2,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500&display=swap");
 @import "./configs/_reset";
 @import "./configs/_variables";
-@import "./configs/shadows";
+@import "./configs/_shadows";
 
 //Components
+@import "./components/_range";
 @import "./components/_nav";
 @import "./components/_video";
 @import "./components/_assignForm";

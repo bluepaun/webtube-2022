@@ -22,7 +22,6 @@ const bro = () => {
   return through.obj((file, enc, cb) => {
     const filename = file.path;
     let compiled;
-    console.log(filename);
     browserify(filename)
       .transform("babelify", {
         presets: ["@babel/preset-env"],
@@ -102,23 +101,14 @@ const buildScss = () => {
 };
 
 const buildJs = () => {
-  return (
-    gulp
-      .src(routes.js.src)
-      /* .pipe(bro()) */
-      .pipe(bro2())
-      .pipe(gulp.dest(routes.js.dest))
-  );
+  return gulp.src(routes.js.src).pipe(bro()).pipe(gulp.dest(routes.js.dest));
 };
 const buildDeployJs = () => {
-  return (
-    gulp
-      .src(routes.js.src)
-      /* .pipe(bro()) */
-      .pipe(bro2())
-      .pipe(uglify())
-      .pipe(gulp.dest(routes.js.dest))
-  );
+  return gulp
+    .src(routes.js.src)
+    .pipe(bro())
+    .pipe(uglify())
+    .pipe(gulp.dest(routes.js.dest));
 };
 
 const buildImg = () =>
