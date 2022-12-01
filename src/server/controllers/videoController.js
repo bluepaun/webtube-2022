@@ -13,7 +13,10 @@ export const home = async (req, res) => {
       .find({})
       .populate("owner")
       .sort({ createdAt: "desc" });
-    return res.render("home", { pageTitle: "home", videos });
+    return res.render("home", {
+      pageTitle: "home",
+      videos,
+    });
   } catch (err) {
     req.flash("error", "Cannot find videos");
     return res.send("error", err);
@@ -28,8 +31,6 @@ export const watch = async (req, res) => {
     .findById(id)
     .populate("owner")
     .populate({ path: "comments", populate: { path: "owner" } });
-
-  console.log(video);
 
   if (!video) {
     req.flash("error", "Cannot find video");
@@ -53,7 +54,7 @@ export const getEdit = async (req, res) => {
   }
 
   if (!req.session.user || String(video.owner) !== req.session.user._id) {
-    req.flash("error", "Not authorized");
+    req.flash("error", "Owner does not match. Please check Login");
     return res.status(403).redirect("/");
   }
 
@@ -74,7 +75,7 @@ export const postEdit = async (req, res) => {
   }
 
   if (!req.session.user || String(video.owner) !== req.session.user._id) {
-    req.flash("error", "Not authorized");
+    req.flash("error", "Owner does not match. Please check Login");
     return res.status(403).redirect("/");
   }
 
@@ -122,7 +123,7 @@ export const deleteVideo = async (req, res) => {
   }
 
   if (!req.session.user || String(video.owner) !== req.session.user._id) {
-    req.flash("error", "Not authorized");
+    req.flash("error", "Owner does not match. Please check Login");
     return res.status(403).redirect("/");
   }
 
@@ -188,6 +189,8 @@ export const postUpload = async (req, res) => {
       pageTitle: "upload",
     });
   }
+
+  req.flash("info", "Upload Video success");
   return res.redirect("/");
 };
 

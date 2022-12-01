@@ -9,6 +9,7 @@
 @import "./components/_nav";
 @import "./components/_video";
 @import "./components/_assignForm";
+@import "./components/flashMsg";
 
 //Pages
 @import "./pages/_profile";
@@ -21,4 +22,5 @@ body {
   background-color: $light-purple;
   padding-top: 1em;
   padding-bottom: 5em;
+  min-height: 100vh;
 }
