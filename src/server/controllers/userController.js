@@ -138,7 +138,7 @@ export const postEdit = async (req, res) => {
   }
 
   if (isDeploy) {
-    if (!avatarUrl.includes("avatars.githubusercontent.com")) {
+    if (avatarUrl && !avatarUrl.includes("avatars.githubusercontent.com")) {
       const fileName = avatarUrl.replace(/^.*\/images\/(.*)$/gi, "$1");
       const param = {
         Bucket: "wetube-blue",
